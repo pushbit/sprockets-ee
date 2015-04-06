@@ -1,0 +1,8 @@
+2015-04-05  2.1.0
+
+	* added servlet.http.JsonServlet.json{Put,Delete}
+
+2014-12-07  2.0.0
+
+	* first release provides a base Servlet that reads and writes JSON objects
+
