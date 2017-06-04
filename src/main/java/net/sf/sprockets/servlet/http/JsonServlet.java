@@ -1,16 +1,16 @@
 /*
  * Copyright 2013-2015 pushbit <pushbit@gmail.com>
- * 
+ *
  * This file is part of Sprockets.
- * 
+ *
  * Sprockets is free software: you can redistribute it and/or modify it under the terms of the GNU
  * Lesser General Public License as published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
- * 
+ *
  * Sprockets is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along with Sprockets. If
  * not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,9 +18,7 @@
 package net.sf.sprockets.servlet.http;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,11 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import net.sf.sprockets.lang.Classes;
+
 /**
  * Deserialises POSTed/PUT JSON objects and serialises your objects to the response in JSON format.
  * Override any of the {@code json*} methods to handle requests. The Content-Type response header is
  * set to {@code application/json; charset=UTF-8}.
- * 
+ *
  * @param <I>
  *            type of JSON object that will be POSTed/PUT and deserialised as the input object. Can
  *            be Void to skip deserialisation.
@@ -49,31 +49,10 @@ public abstract class JsonServlet<I, O> extends HttpServlet {
 	private final Type mOut;
 	private final Gson mGson;
 
-	public JsonServlet() { // walk up the class hierarchy to find the in/out types for this instance
-		Type in = null;
-		Type out = null;
-		Class<?> cls = getClass();
-		while (cls != JsonServlet.class) {
-			Type sup = cls.getGenericSuperclass();
-			if (sup instanceof ParameterizedType) {
-				Type[] types = ((ParameterizedType) sup).getActualTypeArguments();
-				TypeVariable<?>[] vars = cls.getSuperclass().getTypeParameters();
-				for (int i = 0; i < vars.length; i++) {
-					String name = vars[i].getName();
-					if (in == null && name.equals("I")) {
-						in = types[i];
-					} else if (out == null && name.equals("O")) {
-						out = types[i];
-					}
-				}
-				if (in != null && out != null) {
-					break;
-				}
-			}
-			cls = cls.getSuperclass();
-		}
-		mIn = in;
-		mOut = out;
+	public JsonServlet() {
+		Type[] types = Classes.getTypeArguments(getClass(), "I", "O");
+		mIn = types[0];
+		mOut = types[1];
 		mGson = getGson();
 	}
 
@@ -96,7 +75,7 @@ public abstract class JsonServlet<I, O> extends HttpServlet {
 
 	/**
 	 * Handle a GET request.
-	 * 
+	 *
 	 * @return object to serialise to the response in JSON format or null
 	 */
 	protected O jsonGet(HttpServletRequest req, HttpServletResponse resp)
@@ -116,7 +95,7 @@ public abstract class JsonServlet<I, O> extends HttpServlet {
 
 	/**
 	 * Handle a POST request. The POSTed JSON object is deserialised to {@code in}.
-	 * 
+	 *
 	 * @param in
 	 *            null if type {@code I} is Void
 	 * @return object to serialise to the response in JSON format or null
@@ -138,7 +117,7 @@ public abstract class JsonServlet<I, O> extends HttpServlet {
 
 	/**
 	 * Handle a PUT request. The PUT JSON object is deserialised to {@code in}.
-	 * 
+	 *
 	 * @param in
 	 *            null if type {@code I} is Void
 	 * @return object to serialise to the response in JSON format or null
@@ -161,7 +140,7 @@ public abstract class JsonServlet<I, O> extends HttpServlet {
 
 	/**
 	 * Handle a DELETE request.
-	 * 
+	 *
 	 * @return object to serialise to the response in JSON format or null
 	 * @since 2.1.0
 	 */
@@ -172,7 +151,7 @@ public abstract class JsonServlet<I, O> extends HttpServlet {
 
 	/**
 	 * Deserialise the input object from the request.
-	 * 
+	 *
 	 * @return null if type {@code I} is Void
 	 */
 	@SuppressWarnings("unchecked")

@@ -1,10 +1,7 @@
-Sprockets for Java EE [![Maven Central][2]][3]
-==============================================
+Sprockets for Java EE [![Javadoc][javadoc-badge]][javadoc] [![Maven Central][maven-shield]][maven]
+==================================================================================================
 
-Create Servlets that automatically read and write JSON objects.
-
-* [Install](#install)
-* [Javadoc][1]
+Create Servlets that automatically read and write JSON objects or Protocol Buffers messages.
 
 Example
 -------
@@ -23,19 +20,20 @@ public class OrderServlet extends JsonServlet<Order, Confirmation> {
 }
 ```
 
+`WireServlet` follows the same pattern but reads and writes Protocol Buffers messages instead of JSON objects.
+
 Install
 -------
 
-1\. Add the dependency.
-
 ```xml
-	<dependency>
-		<groupId>net.sf.sprockets</groupId>
-		<artifactId>sprockets-ee</artifactId>
-		<version>2.1.0</version>
-	</dependency>
+<dependency>
+    <groupId>net.sf.sprockets</groupId>
+    <artifactId>sprockets-ee</artifactId>
+    <version>3.0.0</version>
+</dependency>
 ```
 
-[1]: https://pushbit.github.io/sprockets-ee/apidocs/
-[2]: https://img.shields.io/maven-central/v/net.sf.sprockets/sprockets-ee.svg
-[3]: https://search.maven.org/#search|ga|1|g%3Anet.sf.sprockets%20a%3Asprockets-ee
+[javadoc]: https://javadoc.io/doc/net.sf.sprockets/sprockets-ee/
+[javadoc-badge]: https://javadoc.io/badge/net.sf.sprockets/sprockets-ee.svg
+[maven]: https://search.maven.org/#search|ga|1|g%3Anet.sf.sprockets%20a%3Asprockets-ee
+[maven-shield]: https://img.shields.io/maven-central/v/net.sf.sprockets/sprockets-ee.svg
